@@ -1,2 +1,4 @@
 # ru
-ruBot
+
+ruBot - frist!
+
