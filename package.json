@@ -1,0 +1,23 @@
+{
+  "name": "ru",
+  "version": "1.0.0",
+  "description": "ruBot - frist!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KScriven/ru.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KScriven/ru/issues"
+  },
+    "dependencies": {
+        "epigrams-on-programming": "git+ssh://git@github.com/KScriven/epigrams-on-programming.git"
+
+    },
+  "homepage": "https://github.com/KScriven/ru#readme"
+}
