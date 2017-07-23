@@ -15,9 +15,9 @@
   "bugs": {
     "url": "https://github.com/KScriven/ru/issues"
   },
-    "dependencies": {
-        "epigrams-on-programming": "git+ssh://git@github.com/KScriven/epigrams-on-programming.git"
-
-    },
+  "dependencies": {
+    "@slack/client": "^3.10.0",
+    "epigrams-on-programming": "git+ssh://git@github.com/KScriven/epigrams-on-programming.git"
+  },
   "homepage": "https://github.com/KScriven/ru#readme"
 }
