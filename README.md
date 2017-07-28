@@ -4,11 +4,11 @@ ru is a bot library that can be required and integrated with a BBC Slack channel
 
 # Installation
 
-Using webhooks within Slack is the easiest way to POST a message to a channel.  You will need a Slack webhook URL and channel name in order to use this library. Use the following URL to get it setup prior to using ru. 
+Using webhooks within Slack is the easiest way to POST a message to a channel.  You will need a Slack webhook URL configuration.  Use the following URL to get Slack WebHooks configured.
 
     Slack webhook setup: https://api.slack.com/incoming-webhooks
 
-ru also requires access to a public URL, which as an example could be an AWS API Gateway endpoint, backed by a Lambda.  As of writing ru AWS Gateway API with a supporting Lambda function is the preferred infrastructure setup. 
+ru will require access to a public URL, as an example AWS API Gateway endpoint. This public endpoint allows access to a Lambda function, which will in turn run the necessary code.  These setup instructions work with AWS Gateway and Lambda configurations.
     
 # Examples
 
