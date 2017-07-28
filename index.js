@@ -1,18 +1,14 @@
 'use strict';
 
-let eps = require('epigrams-on-programming');
-let incomingWebhook = require('@slack/client').IncomingWebhook
+var WebClient = require('@slack/client').WebClient;
 
-const url = process.env.SLACK_WEBHOOK_URL || '';
-const slackChannel = process.env.SLACK_CHANNEL || '';
+var token = process.env.SLACK_API_TOKEN || ''; //see section above on sensitive data
 
-const webhook = new incomingWebhook(url);
-const epigramsOfTheDay = (eps[Math.floor(Math.random()*eps.length)]);
-      
-webhook.send(epigramsOfTheDay, function(err, res) {
+var web = new WebClient(token);
+web.chat.postMessage('#general', 'Hello there', function(err, res) {
     if (err) {
         console.log('Error:', err);
     } else {
-        console.log('Message sent:', res);
+        console.log('Message sent: ', res);
     }
 });

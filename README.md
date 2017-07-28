@@ -13,7 +13,9 @@ Using webhooks within Slack is the easiest way to POST a message to a channel.  
 In order for ru to run correctly two environment variables need to be supplied on the command line.
 
 E.g.:
-    SLACK_WEBHOOK_URL=(insert webhook uri here) SLACK_CHANNEL=(# insert channel name) node index.js
+    SLACK_WEBHOOK_URL=(insert webhook uri here) SLACK_CHANNEL=(# insert channel name) node index.js 
+    
+    Or using the slack native webclient use the API bot token e.g.:  SLACK_API_TOKEN=(API bot token) node index.js
 
 # Dependencies
 
