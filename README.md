@@ -14,6 +14,15 @@ ru will require access to a public URL, as an example AWS API Gateway endpoint. 
 
 In order for ru to run correctly environment variables need to be supplied and it is HIGHLY recommended that no Slack token or bot OAuth token is saved to any config file.  Where possible use Lambda process.env[] to host these secret keys. 
 
+The folder /src has been created to host the configuration file for the Lambda code. 
+In order to ru a local copy of ru, do the following:
+
+```
+   cd src
+   node index.js
+   
+```
+
 DESCRIBE INSTALL and SETUP of ru and EXAMPLE code (including how to build to zip)
 
 # Dependencies
