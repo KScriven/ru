@@ -1,4 +1,4 @@
-# ru
+# ru :bowtie:
 
 ru is a bot library that can be required and integrated with a BBC Slack channel.  ru is able to respond to direct Slack messages and Slack slash commands 
 
