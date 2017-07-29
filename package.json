@@ -7,7 +7,7 @@
     "readme": "node ./node_modules/.bin/node-readme",
     "test": "echo \"Error: no test specified\" && exit 1",
     "reset-build": "rm -rf build && mkdir build",
-    "move-files": "cp src/clients/$FUNC.js build/index.js && cp src/package.json build && cp -R src/lib build/lib",
+    "move-files": "cp src/clients/*/$FUNC.js build/index.js && cp src/package.json build && cp -R src/lib build/lib",
     "install-deps": "cd build && npm install --production",
     "make-dist": "ts=`date +%s` && cd build && zip -rq ruBot-$FUNC-$STAGE-$ts.zip . && mv ruBot-$FUNC-$STAGE-$ts.zip ../dist && echo \"# dist/ruBot-$FUNC-$STAGE-$ts.zip\"",
     "package": "npm-run-all -s reset-build move-files install-deps make-dist"
