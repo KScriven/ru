@@ -1,6 +1,6 @@
 # ru :bowtie:
 
-ru is a bot library that can be required and integrated with a BBC Slack channel.  ru is able to respond to direct Slack messages and Slack slash commands 
+ru is a bot library that can be required and integrated and used within a BBC Slack channel.  ru is able to respond to direct Slack messages, channel actions and configured Slash commands. 
 
 # Installation
 
@@ -15,15 +15,23 @@ ru will require access to a public URL, as an example AWS API Gateway endpoint. 
 In order for ru to run correctly environment variables need to be supplied and it is HIGHLY recommended that no Slack token or bot OAuth token is saved to any config file.  Where possible use Lambda process.env[] to host these secret keys. 
 
 The folder /src has been created to host the configuration file for the Lambda code. 
-In order to ru a local copy of ru, do the following:
+
+
+## Packaging for Distribution
+
+Use the `npm run-scripts` feature to create a deployment package suitable for uploading to AWS.
+
+In order to build the zip file to upload to AWS us the following details:
 
 ```
-   cd src
-   node index.js
-   
+FUNC=webhook STAGE=prod npm run package
 ```
 
-DESCRIBE INSTALL and SETUP of ru and EXAMPLE code (including how to build to zip)
+* Valid `FUNC` names refer to the file basename of a lambda file in the root of the `src/` folder.
+* Valid `STAGE` names are: "prod".
+* The distribution package (zip) will appear in the `dist/` folder.
+
+
 
 # Dependencies
 
