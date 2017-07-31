@@ -1,128 +1,59 @@
 'use strict';
 
-
-const request = require('request');
-const express = require('express');
-const bodyParser = require('body-parser');
-
-const slackId = process.env.SLACK_CLIENT_ID;
-const clientSecret = process.env.SLACK_CLIENT_SECRET;
-const slackToken = process.env.SLACK_VERIFICATION_TOKEN;
-
-const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-const server = app.listen(process.env.PORT || 3333, () => {
-  console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
-});
-
-
-// Auth
-
-app.get('/slack', function(req, res){
-  if (!req.query.code) { // access denied
-    res.redirect('http://www.girliemac.com/slack-httpstatuscats/');
-    return;
-  }
-  var data = {form: {
-      client_id: slackId,
-      client_secret: clientSecret,
-      code: req.query.code
-  }};
-  request.post('https://slack.com/api/oauth.access', data, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      // Get an auth token
-      let token = JSON.parse(body).access_token;
-
-      // Get the team domain name to redirect to the team URL after auth
-      request.post('https://slack.com/api/team.info', {form: {token: token}}, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-          if(JSON.parse(body).error == 'missing_scope') {
-            res.send('HTTP Status Cats has been added to your team!');
-          } else {
-            let team = JSON.parse(body).team.domain;
-            res.redirect('http://' +team+ '.slack.com');
-          }
-        }
-      });
-    }
-  })
-});
-
-/* *******************************
-/* HTTP Status Cats Slash Command
-/* ***************************** */
-
-app.get('/', (req, res) => {
-  handleQueries(req.query, res);
-});
-
-app.post('/', (req, res) => {
-  handleQueries(req.body, res);
-});
-
 /*
-response:
-{ token: '2P429UX-------',
-  team_id: 'T1L---',
-  team_domain: 'girliemac',
-  channel_id: 'C1L---',
-  channel_name: 'general',
-  user_id: 'U1L----',
-  user_name: 'girlie_mac',
-  command: '/httpstatus',
-  text: '405',
-  response_url: 'https://hooks.slack.com/commands/--- }
+
+
+  To encrypt your secrets use the following steps:
+
+  1. Create or use an existing KMS Key - http://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html
+
+  2. Click the "Enable Encryption Helpers" checkbox
+
+  3. Paste <COMMAND_TOKEN> into the kmsEncryptedToken environment variable and click encrypt
+
+Follow these steps to complete the configuration of your command API endpoint
+
+  1. When completing the blueprint configuration select "Open" for security
+     on the "Configure triggers" page.
+
+  2. Enter a name for your execution role in the "Role name" field.
+     Your function's execution role needs kms:Decrypt permissions. We have
+     pre-selected the "KMS decryption permissions" policy template that will
+     automatically add these permissions.
+
+  3. Update the URL for your Slack slash command with the invocation URL for the
+     created API resource in the prod stage.
 */
 
-function handleQueries(q, res) {
-  if(q.token !== process.env.SLACK_VERIFICATION_TOKEN) {
-    // the request is NOT coming from Slack!
-    return;
-  }
-  if (q.text) {
-    let code = q.text;
+const AWS = require('aws-sdk');
+const qs = require('querystring');
 
-    if(! /^\d+$/.test(code)) { // not a digit
-      res.send('U R DOIN IT WRONG. Enter a status code like 200 😒');
-      return;
+const slackToken = process.env.SLACK_VERIFICATION_TOKEN;
+let token;
+
+
+function processEvent(event, callback) {
+    const params = qs.parse(event.body);
+    const requestToken = params.token;
+    if (requestToken !== token) {
+        console.error(`Request token (${requestToken}) does not match expected`);
+        return callback('Invalid request token');
     }
 
-    let status = httpstatus[code];
-    if(!status) {
-      res.send('Bummer, ' + code + ' is not an official HTTP status code 🙃');
-      return;
-    }
+    const user = params.user_name;
+    const command = params.command;
+    const channel = params.channel_name;
+    const commandText = params.text;
 
-    let image = 'https://http.cat/' + code;
-    let data = {
-      response_type: 'in_channel', // public to the channel
-      text: code + ': ' + status,
-      attachments:[
-      {
-        image_url: image
-      }
-    ]};
-    res.json(data);
-  } else {
-    let data = {
-      response_type: 'ephemeral', // private message
-      text: 'How to use /httpstatus command:',
-      attachments:[
-      {
-        text: 'Type a status code after the command, e.g. `/httpstatus 404`',
-      }
-    ]};
-    res.json(data);
-  }
+    callback(null, `${user} invoked ${command} in ${channel} with the following text: ${commandText}`);
 }
 
 
 exports.handler = (event, context, callback) => {
-    if (slackId) {
-        handleQueries(event, callback);
+    if (slackToken) {
+        processEvent(event, context);
+        context.succeed();
     } else {
-        callback('Error in Slack configuration');
+        callback('An error has occured');
     }
 };
